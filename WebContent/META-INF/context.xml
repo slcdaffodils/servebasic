@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context path="/servebasic" docBase="servebasic"
+   crossContext="true" reloadable="true" debug="1">
+
+<Resource name="jdbc/servebasic" 
+		  global="jdbc/servebasic" 
+		  auth="Container" 
+		  type="javax.sql.DataSource" 
+		  driverClassName="com.mysql.jdbc.Driver" 
+		  url="jdbc:mysql://localhost:3306/servebasic" 
+		  username="root" 
+		  password="root" 
+		  
+		  maxActive="100" 
+		  maxIdle="20" 
+		  minIdle="5" 
+		  maxWait="10000"/>
+</Context>
+
+	
