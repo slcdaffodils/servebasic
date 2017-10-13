@@ -5,7 +5,7 @@ app.controller("crudController", function ($scope, crudService) {
 	$scope.itemShowCount = ['5','10','20', '30'];
 	$scope.typeList = [1,2,3,4,5,6,7,8,9,10];
 	$scope.date = new Date();
-
+	$scope.pageNumber=1;
 	GetAllUsers();
 	
 	//To Get all users list
@@ -142,5 +142,8 @@ app.controller("crudController", function ($scope, crudService) {
 		$scope.uActive=false;
 		$scope.search = '';
 	};
-
+    $scope.callMe=function(newPageNumber){
+    	console.log("data",newPageNumber);
+    	$scope.pageNumber=newPageNumber;
+    }
 });

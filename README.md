@@ -31,7 +31,7 @@ create database servebasic;
 
 use databse servebasic;
 
-CREATE TABLE `users` (
+CREATE TABLE `USERS` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `firstname` varchar(30) DEFAULT NULL,
   `lastname` varchar(20) DEFAULT NULL,

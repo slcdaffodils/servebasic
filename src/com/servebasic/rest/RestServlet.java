@@ -13,15 +13,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import com.servebasic.util.DBConnectionManager;
 import com.servebasic.util.DBUtil;
 
 public class RestServlet extends HttpServlet {
+	private final static Logger LOGGER = Logger.getLogger(RestServlet.class);
+	
+	@Override
+	public void init() throws ServletException {
+		// TODO Auto-generated method stub		
+		super.init();
+	}
 
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
@@ -63,11 +73,12 @@ public class RestServlet extends HttpServlet {
 //	   out.close();
 	   
 	   if("getallusers".equalsIgnoreCase(request.getParameter("query"))){
+		   LOGGER.info( "getting info with param getallusers");
 		try{
 			  Connection con = DBConnectionManager.getStoredConnection(request);
 	          
 	          Statement stmt = con.createStatement();
-	          String query = "select * from users";
+	          String query = "select * from USERS";
 	          ResultSet rs = stmt.executeQuery(query);
 	          out.println("{\"userList\":[");
 	          boolean first=true;
@@ -89,16 +100,17 @@ public class RestServlet extends HttpServlet {
 	          out.println("]}");
 	          out.close();
 	      }  catch (Exception e) {
-	          e.printStackTrace();
+	          //e.printStackTrace();
+	    	  LOGGER.error( "Error doing getallusers", e);
 	          throw new ServletException(e.getMessage());
 	      } 
 	    }else{
-	    	
+	    	LOGGER.info( "get specific user with id {0}");
 	    	try{
 				  Connection con = DBConnectionManager.getStoredConnection(request);
 		          
 		          Statement stmt = con.createStatement();
-		          String query = "select * from users where id=?";
+		          String query = "select * from USERS where id=?";
 		         // ResultSet rs = stmt.executeQuery(query);
 		          PreparedStatement preparedStmt = con.prepareStatement(query);
 		          preparedStmt.setString (1, request.getParameter("id"));
@@ -119,10 +131,10 @@ public class RestServlet extends HttpServlet {
 
 		          out.close();
 		      }  catch (Exception e) {
-		          e.printStackTrace();
+		         // e.printStackTrace();
+		    	  LOGGER.error( "Error doing specific user", e);
 		          throw new ServletException(e.getMessage());
 		      } 
-	    	
 	    }
 	   
 	   
@@ -137,11 +149,12 @@ public class RestServlet extends HttpServlet {
 		 PrintWriter out = resp.getWriter();
 		 Connection con = DBConnectionManager.getStoredConnection(req);
 		if("delete".equalsIgnoreCase(req.getParameter("query"))){
+			LOGGER.info( "delete specific user");
 			try{
 				 
 		          
 		          Statement stmt = con.createStatement();
-		          String query = "delete from users where id=?";
+		          String query = "delete from USERS where id=?";
 		         // ResultSet rs = stmt.executeQuery(query);
 		          PreparedStatement preparedStmt = con.prepareStatement(query);
 		          preparedStmt.setString (1, req.getParameter("userId"));
@@ -158,14 +171,15 @@ public class RestServlet extends HttpServlet {
 
 		          out.close();
 		      }  catch (Exception e) {
-		          e.printStackTrace();
+		         // e.printStackTrace();
+		    	  LOGGER.error( "get specific user with id {0}",e);
 		          throw new ServletException(e.getMessage());
 		      } 
-			
 			
 		 
 		}else{
 			try{
+				LOGGER.debug( "Create  specific user");
 			String sql = "insert into Users (firstname, lastname, type, active) values (?,?,?,?)";
 			 
 			PreparedStatement statement = con.prepareStatement(sql);
@@ -184,13 +198,16 @@ public class RestServlet extends HttpServlet {
 			        out.println("\"msg\": \"Record updated successfully......\"");
 			      out.println("}"); 
 			}else{
-				 throw new ServletException("Not able to delete");
+				 LOGGER.error( "Error inserting user rowUpdated is have issue....");
+				 throw new ServletException("Not able to Update");
 			}
 			
 			}catch(Exception e){
-			     e.printStackTrace();
+			   //  e.printStackTrace();
+				 LOGGER.error( "Error inserting user rowUpdated is have issue....",e);
 		          throw new ServletException(e.getMessage());
 			}
+			
 	
 		}
 	}
@@ -202,7 +219,9 @@ public class RestServlet extends HttpServlet {
 		 Connection con = DBConnectionManager.getStoredConnection(req);
 	      
 	      try{
-				String sql = "UPDATE Users SET firstname=?, lastname=?, type=? , active=? WHERE id=?";
+	    	
+	    	  LOGGER.debug( "updating user");
+				String sql = "UPDATE USERS SET firstname=?, lastname=?, type=? , active=? WHERE id=?";
 				BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream(),"UTF-8"));
 				String data = br.readLine().toString();
                 Map<String,String> map=this.parsePut(data);
@@ -222,11 +241,14 @@ public class RestServlet extends HttpServlet {
 				        out.println("\"msg\": \"Record updated successfully......\"");
 				      out.println("}"); 
 				}else{
+					 //LOGGER.log(Level.SEVERE, "Error updating user, rowUpdated comes as 0");
+					 LOGGER.error( "Error updating user, rowUpdated comes as 0");
 					 throw new ServletException("Not able to update record");
 				}
 				
 				}catch(Exception e){
-				     e.printStackTrace();
+				    // e.printStackTrace();
+					LOGGER.error( "Error updating user 0",e);
 			          throw new ServletException(e.getMessage());
 				}
 	}

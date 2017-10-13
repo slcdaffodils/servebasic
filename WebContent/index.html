@@ -109,7 +109,7 @@
 					</tr>
 					
 					<tr dir-paginate="user in users|orderBy:sortKey:reverse|filter:search:type|itemsPerPage:actItem" ng-class="$even ? 'even-row' : 'odd-row'">
-						<td>{{$index+1}}</td>
+						<td>{{($index+1)+(actItem*(pageNumber-1))}}</td>
 						<td>{{user.firstname | uppercase}}</td>
 						<td>{{user.lastname | lowercase | limitTo: 2}}</td>
 						<td>{{user.type}}</td>
@@ -118,7 +118,7 @@
 						<td><span ng-click="deleteUser(user)" class="btn btn-danger">X</span></td>
 					</tr>
 				</table>
-				
+			
 				<div class="pull-right" style="width:20%;">
 						<select class="form-control"
 						ng-model="actItem"
@@ -131,7 +131,8 @@
 					<dir-pagination-controls
 					max-size="5"
 					direction-links="true"
-					boundary-links="true" >
+					boundary-links="true"
+					on-page-change="callMe(newPageNumber)" >
 					</dir-pagination-controls>
 				</div>
 				
