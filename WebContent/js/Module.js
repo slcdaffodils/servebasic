@@ -1,1 +1,1 @@
-var app = angular.module("crudApp", ['angularUtils.directives.dirPagination'] );
+angular.module("crudApp", ['angularUtils.directives.dirPagination'] );

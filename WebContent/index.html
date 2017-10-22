@@ -10,30 +10,31 @@
 	</style>
  </head>
  <body>
-  
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a href="#">Home</a></li>
-					<li><a href="#">About US</a></li>
-                </ul>
-                <p class="nav navbar-text navbar-right">Hello, Yogi</p>
-            </div>
-        </div>
-    </div>
+  	<div ng-app="crudApp">
+  	<div ng-controller="crudController">
+	    <div class="navbar navbar-inverse navbar-fixed-top">
+	        <div class="container">
+	            <div class="navbar-header">
+	                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	                    <span class="icon-bar"></span>
+	                    <span class="icon-bar"></span>
+	                    <span class="icon-bar"></span>
+	                </button>
+	            </div>
+	            <div class="navbar-collapse collapse">
+	                <ul class="nav navbar-nav">
+	                    <li><a href="" ng-click="resetHome(true);">Home</a></li> 
+						<li><a href="" ng-click="resetHome(false);">Netflow data</a></li>
+	                </ul>
+	                <p class="nav navbar-text navbar-right">pi360</p>
+	            </div>
+	        </div>
+	    </div> 
 
-	<div ng-app="crudApp">
-		<div ng-controller="crudController">
 
-			<div class="container well mtp75">
+		
+          <div ng-if="inHome">
+			<div class="container well mtp75">  
 				<div class="row">
 					<span class="pull-left">
 						<button ng-click="reset()" class="btn btn-danger">Reset</button>
@@ -111,7 +112,7 @@
 					<tr dir-paginate="user in users|orderBy:sortKey:reverse|filter:search:type|itemsPerPage:actItem" ng-class="$even ? 'even-row' : 'odd-row'">
 						<td>{{($index+1)+(actItem*(pageNumber-1))}}</td>
 						<td>{{user.firstname | uppercase}}</td>
-						<td>{{user.lastname | lowercase | limitTo: 2}}</td>
+						<td>{{user.lastname | lowercase | limitTo: 20}}</td>
 						<td>{{user.type}}</td>
 						<td>{{user.active}}</td>
 						<td><div ng-click="editUser(user)" class="btn btn-primary">E</div></td>
@@ -147,24 +148,24 @@
 				<table class="table">
 					<tr>
 						<td><b><i>{{Action}} User</i></b></td>
-						<td><input type="text" disabled="disabled" ng-model="UserId" /></td>
+						<td><input type="text" disabled="disabled" ng-model="whatUser.UserId" /></td>
 					</tr>
 					<tr>
 						<td>First Name</td>
-						<td><input type="text" maxlength="20" placeholder="First Name" ng-model="UserFirstname" /></td>
+						<td><input type="text" maxlength="20" placeholder="First Name" ng-model="whatUser.UserFirstname" /></td>
 					</tr>
 					<tr>
 						<td>Last Name</td>
-						<td><input type="text" maxlength="20" placeholder="Last Name" ng-model="UserLastname" /></td>
+						<td><input type="text" maxlength="20" placeholder="Last Name" ng-model="whatUser.UserLastname" /></td>
 					</tr>
 					<tr>
 						<td>User Type</td>
-						<td><input type="text" maxlength="20" placeholder="Type Of User" ng-model="UserType" /></td>
+						<td><input type="text" maxlength="20" placeholder="Type Of User" ng-model="whatUser.UserType" /></td>
 					</tr>
 					<tr>
 						<td>Active</td>
 						<td>
-							<input type="checkbox" ng-checked="UserActiveChecked" ng-model="UserActive" />
+							<input type="checkbox" ng-checked="UserActiveChecked" ng-model="whatUser.UserActive" />
 						</td>
 					</tr>
 					<tr>
@@ -177,6 +178,72 @@
 			</div><!-- End OF Container -->
 			<br />
 			
+		 </div>	<!-- End Of inHome -->
+		 <div ng-if="!inHome"> <!-- start of search elastic -->
+		 <div class="container well mtp75"> 
+		 	<div class="row">
+				
+				<span>
+						<input type="text" maxlength="20" placeholder="Source IP" ng-model="what.ip" />
+					</span>
+					<span ng-click="searchNetflow()" class="btn btn-danger">Search</span>
+			</div>
+		 	<div class="row">
+					
+				<table cellpadding=10 cellspacing=10 border=0 class="table">
+					<tr>
+					      <th>Access Date/Time</th>
+			              <th class="align-right">Duration</th>
+			
+			              <th class="align-right">Source IP</th>
+			              <th class="align-right">Source Port</th>
+			              
+			              <th class="align-right">Protocol</th>
+			
+			              <th class="align-right">Destination IP</th>
+			              <th class="align-right">Destination Port</th>
+			
+			              <th class="align-right">Packets</th>
+			              <th class="align-right">Byte</th>
+			              <th class="align-right">Flows</th>
+					</tr>
+					
+					<tr dir-paginate="item in netflowData|filter:search:type|itemsPerPage:actItem" ng-class="$even ? 'even-row' : 'odd-row'">
+			                <td ngClass="nowrap">{{ item._source.accessDate }}</td>
+			                <td class="align-right">{{ item._source.duration }}</td>
+			                <td class="align-right">{{ item._source.sourceIp | ipport:0  }}</td>
+			                <td class="align-right">{{ item._source.sourceIp | ipport:1 }}</td>
+			                
+			                <td class="align-right">{{ item._source.protocol }}</td>
+			
+			                <td class="align-right">{{ item._source.destinationIp | ipport:0 }}</td>
+			                <td class="align-right">{{ item._source.destinationIp | ipport:1 }}</td>
+			
+			                <td class="align-right">{{ item._source.packets }}</td>
+			                <td class="align-right">{{ item._source.bytes }}</td>
+			                <td class="align-right">{{ item._source.flows }}</td>
+					</tr>
+				</table>
+			
+				<div class="pull-right" style="width:20%;">
+						<select class="form-control"
+						ng-model="actItem"
+						ng-change="activeStatus(actItem)"
+						ng-options="page for (idx,page) in itemShowCount">
+						</select>
+				</div>
+
+				<div class="text-center">
+					<dir-pagination-controls
+					max-size="500"
+					direction-links="true"
+					boundary-links="true"
+					on-page-change="callMe(newPageNumber)" >
+					</dir-pagination-controls>
+				</div>
+			   </div>
+		      </div> <!-- End OF Row -->
+		 </div>
 		</div> <!-- End Of ng-controller -->
 	</div> <!-- End Of ng-app -->
 

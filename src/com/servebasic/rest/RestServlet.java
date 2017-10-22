@@ -26,6 +26,7 @@ import com.servebasic.util.DBUtil;
 
 public class RestServlet extends HttpServlet {
 	private final static Logger LOGGER = Logger.getLogger(RestServlet.class);
+	private static int exceptionCounter=1;
 	
 	@Override
 	public void init() throws ServletException {
@@ -71,9 +72,20 @@ public class RestServlet extends HttpServlet {
 //	        out.println("}");  
 //		}
 //	   out.close();
-	   
+	   exceptionCounter++;
 	   if("getallusers".equalsIgnoreCase(request.getParameter("query"))){
 		   LOGGER.info( "getting info with param getallusers");
+		   
+		   if(exceptionCounter%10==0){
+			   try{
+			   throw new Exception("Explicity exception for testing out the exceptiond catch....");
+			   }catch(Exception e){
+				   LOGGER.error( "Error doing specific user", e);
+				   if(exceptionCounter>30000){
+					   exceptionCounter=1;
+				   }
+			   }
+		   }
 		try{
 			  Connection con = DBConnectionManager.getStoredConnection(request);
 	          
