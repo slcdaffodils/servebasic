@@ -2,6 +2,7 @@ package com.servebasic.util;
 
 import java.io.*;
 import java.net.*;
+import java.util.Map;
 //scheme:[//[user:password@]host[:port]][/]path[?query][#fragment]
 class XX
 {
@@ -12,7 +13,12 @@ class XX
      System.err.println ("usage: java URLDemo1 url");
      return;
    }
-
+   Map<String, String> env = System.getenv();
+   for (String envName : env.keySet()) {
+       System.out.format("%s=%s%n",
+                         envName,
+                         env.get(envName));
+   }
   // URL url = new URL (args [0]);
    URI url = new URI(args[0]);
    System.out.println ("Authority = " +

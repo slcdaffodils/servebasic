@@ -46,6 +46,12 @@ You need to setup the system environment variable
 For window set up following variable in system environment variable....
 DATABASE_URL=mysql://root:root@localhost:3306/servebasic
 
+OR you can give as a property when you startup the tomcat
+
+-DDATABASE_URL="mysql://root:root@localhost:3306/servebasic"
+
+
+
 ==================DATASOURCE configurations=====================
 <Resource name="jdbc/servebasic" 
 		  global="jdbc/servebasic" 
