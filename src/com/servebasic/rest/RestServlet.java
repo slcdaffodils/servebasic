@@ -192,7 +192,7 @@ public class RestServlet extends HttpServlet {
 		}else{
 			try{
 				LOGGER.debug( "Create  specific user");
-			String sql = "insert into Users (firstname, lastname, type, active) values (?,?,?,?)";
+			String sql = "insert into USERS (firstname, lastname, type, active) values (?,?,?,?)";
 			 
 			PreparedStatement statement = con.prepareStatement(sql);
 			BufferedReader br = new BufferedReader(new InputStreamReader(req.getInputStream(),"UTF-8"));
