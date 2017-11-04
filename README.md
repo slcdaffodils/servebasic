@@ -41,6 +41,11 @@ CREATE TABLE `USERS` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 ;
 
 
+==================DATASOURCE configurations Environment variable...=====================
+You need to setup the system environment variable
+For window set up following variable in system environment variable....
+DATABASE_URL=mysql://root:root@localhost:3306/servebasic
+
 ==================DATASOURCE configurations=====================
 <Resource name="jdbc/servebasic" 
 		  global="jdbc/servebasic" 
