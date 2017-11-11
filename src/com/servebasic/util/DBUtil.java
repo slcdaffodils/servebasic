@@ -15,7 +15,8 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.*;
-import org.apache.commons.dbcp.*;
+//import org.apache.commons.dbcp.*;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.log4j.Logger;
 
 import com.servebasic.rest.RestServlet;
